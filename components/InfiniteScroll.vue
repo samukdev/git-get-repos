@@ -7,12 +7,19 @@
     )
       slot(name="item" v-bind:item="item")
     div(v-if="list.length" v-observe-visibility="handleScrolledToBottom")
-    slot(name="loading")
+    div(class="loading-more text-center" v-if="loading")
+      i(class="spinner-grow spinner-grow-sm")
+      i(class="spinner-grow spinner-grow-md")
+      i(class="spinner-grow spinner-grow-sm")
 </template>
 
 <script>
 export default {
   props: {
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     list: {
       type: Array,
       default: () => [],
@@ -43,6 +50,16 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.loading-more {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  i {
+    margin: 0.5rem;
+  }
+}
 </style>

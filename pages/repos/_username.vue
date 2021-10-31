@@ -1,39 +1,25 @@
 <template lang="pug">
   div(class="wrapper" v-if="!loading")
-    div(class="user-wrapper" v-if="user")
-      div(class="user-banner")
-        div(class="row")
-          div(class="col-auto")
-            div(class="avatar avatar-xl")
-              img(
-                :src="user.avatar_url"
-              )
-          div(class="col")
-            div(class="body-3")
-              | {{ user.login }}
-            h6
-              | {{ user.name }}
-            div
-              | {{ user.company }}
-            div
-              | {{ user.bio }}
+    div(class="user-banner-wrapper" v-if="user")
+      UserBanner(
+        :user="user"
+      )
+
     div
       h4
         | Repositórios
         span
           | ({{ user.public_repos }})
+
     InfiniteScroll(
       :list="repos"
       key-prop="name"
       class="row"
       item-class="col-md-4 mb-4"
       @loadMore="getRepos"
+      :loading="loadingMoreItems"
+      v-if="repos.length"
     )
-      template(#loading)
-        div(class="loading-more text-center" v-if="loadingMore")
-          i(class="spinner-grow spinner-grow-sm")
-          i(class="spinner-grow spinner-grow-md")
-          i(class="spinner-grow spinner-grow-sm")
       template(#item="{ item }")
         div(  
           class="card card-alternative"
@@ -51,7 +37,8 @@
           div(class="card-footer")
             small
               | Última atualização em {{ formatDate(item.updated_at) }}
-
+    div(v-else class="mt-5 text-center text-grey")
+      | Este usuário não possui repositórios públicos no momento :(
   div(v-else class="loading")
     i(class="spinner-border spinner-border-lg")
 </template>
@@ -64,9 +51,7 @@ export default {
     repos: [],
     user: null,
     loading: true,
-    loadingMore: false,
-    search: '',
-    searchModel: '',
+    loadingMoreItems: false,
   }),
 
   created() {
@@ -93,14 +78,14 @@ export default {
     async getRepos () {
       if(this.repos.length >= this.user.public_repos) return
 
-      if(this.repos.length) this.loadingMore = true;
+      if(this.repos.length) this.loadingMoreItems = true;
 
       const username = this.$route.params.username;
 
-      const calculatedPage = this.repos ? Math.floor(this.repos.length / 9) + 1 : 1;
+      const calculatedPage = this.repos ? Math.floor(this.repos.length / 12) + 1 : 1;
       
       const params = {
-        per_page: 9,
+        per_page: 12,
         page: calculatedPage,
       }
 
@@ -113,7 +98,7 @@ export default {
         html_url
       }))
 
-      this.loadingMore = false;
+      this.loadingMoreItems = false;
       this.repos.push(...reposMap);
 
     },
@@ -130,17 +115,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.loading-more {
-  width: 100%;
-  padding: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  i {
-    margin: 0.5rem;
-  }
-}
 .loading {
   height: 100vh;
   width: 100vh;
@@ -160,18 +134,11 @@ h4 span {
   color: #606060;
   margin-left: 0.25rem;
 }
-h6 {
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-.user-wrapper {
+
+.user-banner-wrapper {
   margin-bottom: 2.5rem;
 }
-.user-banner {
-  padding: 1.5rem;
-  border: 1px solid #e3e5e6;
-  border-radius: 4px;
-}
+
 .ellipsis {
   white-space: nowrap;                  
   overflow: hidden;
