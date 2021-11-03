@@ -34,3 +34,12 @@
 body {
   color: #333333;
 }
+
+// Fade transition
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .35s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}

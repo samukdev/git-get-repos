@@ -39,6 +39,7 @@
               | Última atualização em {{ formatDate(item.updated_at) }}
     div(v-else class="mt-5 text-center text-grey")
       | Este usuário não possui repositórios públicos no momento :(
+    ScrollTopButton
   div(v-else class="loading")
     i(class="spinner-border spinner-border-lg")
 </template>
