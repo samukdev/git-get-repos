@@ -13,8 +13,11 @@
             | {{ user.name }}
           div
             | {{ user.company }}
-          div
+          div(v-if="user.bio")
             | {{ user.bio }}
+          div(v-else class="text-grey")
+            | Este usuário não possui biografia.
+
 </template>
 
 <script>

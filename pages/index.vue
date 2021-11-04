@@ -34,7 +34,7 @@ export default {
       this.isLoading = true;
 
       this.$axios.get(`/users/${user}`).then(() => {
-        this.$router.push(`repos/${user}`)
+        this.$router.push(`/user/${user}`)
       }).catch(err => {
         if(err.response.status === 404) {
           this.error = 'Poxa, parece que esse usuário não existe :('

@@ -1,15 +1,16 @@
 <template lang="pug">
-  div(class="wrapper" v-if="!loading")
-    div(class="user-banner-wrapper" v-if="user")
-      UserBanner(
-        :user="user"
-      )
+  div(v-if="!loading")
+    UserBanner(
+      :user="user"
+      class="mb-5"
+    )
 
     div
-      h4
+      h4(class="mb-2")
         | Repositórios
         span
           | ({{ user.public_repos }})
+    hr(class="mt-3 mb-5")
 
     InfiniteScroll(
       :list="repos"
@@ -30,16 +31,16 @@
             div(class="card-text ellipsis-3-lines" style="min-height: 1.75rem")
               | {{ item.description || '' }}
             div(class="card-action")
-              button(class="button button-sm button-dark" @click="openInNewTab(item.html_url)")
-                | Ver no GitHub
-              button(class="button button-sm button-primary" @click="$router.push({ name: 'commits', params: { repo_id: 12 } })")
-                | Detalhes
+              //- button(class="button button-sm button-dark" @click="openInNewTab(item.html_url)")
+              //-   | Ver no GitHub
+              button(class="button button-sm button-primary" @click="$router.push(`/user/${$route.params.username}/${item.name}`)" )
+                icon( :icon="['fas', 'info-circle']" class="fa-icon")
+                | Ver Detalhes
           div(class="card-footer")
             small
               | Última atualização em {{ formatDate(item.updated_at) }}
     div(v-else class="mt-5 text-center text-grey")
       | Este usuário não possui repositórios públicos no momento :(
-    ScrollTopButton
   div(v-else class="loading")
     i(class="spinner-border spinner-border-lg")
 </template>
@@ -48,6 +49,7 @@
 /* eslint-disable camelcase */
 
 export default {
+  layout: 'main',
   data: () => ({
     repos: [],
     user: null,
@@ -116,6 +118,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.button-primary {
+  display: flex;
+  align-items: center;
+  .fa-icon {
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+  }
+}
 .loading {
   height: 100vh;
   width: 100vh;
@@ -136,10 +146,6 @@ h4 span {
   margin-left: 0.25rem;
 }
 
-.user-banner-wrapper {
-  margin-bottom: 2.5rem;
-}
-
 .ellipsis {
   white-space: nowrap;                  
   overflow: hidden;
@@ -155,11 +161,6 @@ h4 span {
 }
 .card-wrapper {
   margin-bottom: 1.5rem;
-}
-.wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 3rem 1rem;
 }
 
 .card-alternative {

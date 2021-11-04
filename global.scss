@@ -35,6 +35,17 @@ body {
   color: #333333;
 }
 
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+  min-height: 100vh;
+}
+
+.tooltip {
+  z-index: 2;
+}
+
 // Fade transition
 
 .fade-enter-active, .fade-leave-active {
